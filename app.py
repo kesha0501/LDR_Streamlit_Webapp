@@ -289,14 +289,14 @@ st.title("🛡️ Legal Document Redaction")
 
 st.markdown("""
     <div class="subtitle">
-    🔒 Secure document redaction using BERT-NER AI • Redacts PER, ORG, LOC entities
+    🔒 Secure document redaction using LDR-NER AI • Redacts sensitive PII and structured data
     </div>
 """, unsafe_allow_html=True)
 
 st.markdown("---")
 
 # Load NER model and redaction function from inference script
-st.info(f"🤖 Model: **{HF_MODEL_NAME}** | Architecture: Token Classification (Legal BERT)")
+st.info(f"🤖 Model: **{HF_MODEL_NAME}** | Architecture: Token Classification (LDR-NER)")
 
 # -----------------------------
 # Text Extraction Functions
@@ -346,9 +346,14 @@ st.sidebar.markdown("### 🎯 Select Entities to Redact")
 
 # Define colors for each entity type
 entity_colors = {
-    "PER": "#FF6B6B",  # Red for Person
-    "LOC": "#4ECDC4",  # Teal for Location
-    "ORG": "#95E1D3"   # Light green for Organization
+    "PER": "#FF6B6B",    # Red for Person
+    "ORG": "#95E1D3",    # Light green for Organization
+    "LOC": "#4ECDC4",    # Teal for Location
+    "CODE": "#FFD93D",   # Yellow for Code
+    "DATETIME": "#6BCB77",  # Green for Date/Time
+    "DEM": "#FF6B9D",    # Pink for Demographic
+    "MISC": "#A8D8EA",   # Light blue for Miscellaneous
+    "QUANTITY": "#AA96DA"  # Purple for Quantity
 }
 
 # Multi-select for entity types
@@ -420,7 +425,7 @@ if extracted_text:
         )
 
     # Apply redaction using inference script logic
-    with st.spinner("Running BERT-NER redaction..."):
+    with st.spinner("Running LDR-NER redaction..."):
         try:
             # Use the imported inference script's redaction function
             processed_text = redact_text(extracted_text, selected_entities)

@@ -6,14 +6,19 @@ from transformers import pipeline, AutoTokenizer, AutoModelForTokenClassificatio
 import os
 
 # Model configuration
-HF_MODEL_NAME = "sayeedlearnstech/LDR-NER_legal-BERT_fine_tuned"
-model_path = "legal_bert_final"
+HF_MODEL_NAME = "sayeedlearnstech/LDR-NER"
+model_path = "ldr_ner_model"
 
 # Entity types that can be redacted
 REDACTED_ENTITIES = {
     "PER": "Person Names",
+    "ORG": "Organizations",
     "LOC": "Locations",
-    "ORG": "Organizations"
+    "CODE": "Code",
+    "DATETIME": "Date/Time",
+    "DEM": "Demographic Info",
+    "MISC": "Miscellaneous",
+    "QUANTITY": "Quantities"
 }
 
 def download_model():
@@ -67,11 +72,11 @@ except Exception as e:
 def redact_text(text, selected_entities=None):
     """
     Redact sensitive information from text using NER model
-    Redacts: PER (Person), LOC (Location), ORG (Organization)
+    Redacts: CODE, DATETIME, DEM, LOC, MISC, ORG, PERSON, QUANTITY, and O (other tags)
     
     Args:
         text: Input text to redact
-        selected_entities: List of entity types to redact (e.g., ["PER", "LOC", "ORG"])
+        selected_entities: List of entity types to redact (e.g., ["PERSON", "LOC", "ORG"])
                           If None, redacts all entity types
         
     Returns:
