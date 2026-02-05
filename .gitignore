@@ -14,6 +14,7 @@ env/
 
 # Model files (too large for Git)
 legal_bert_final/
+ldr_ner_model/
 
 # IDE
 .vscode/
