@@ -3,3 +3,9 @@ pypdf
 python-docx
 transformers
 torch
+pandas
+numpy
+scikit-learn
+spacy
+PyPDF2
+python-docx
