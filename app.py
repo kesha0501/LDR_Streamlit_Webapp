@@ -3,6 +3,7 @@ Streamlit App for Legal Document Redaction using BERT-NER
 
 This app allows users to upload or paste text from PDF, Word, or Text files and redact sensitive information using a NER model.
 """
+
 import streamlit as st
 from pypdf import PdfReader
 import re
@@ -486,3 +487,15 @@ if extracted_text:
 
 else:
     st.info("Upload a file (PDF, Word, Text) or paste text to start redaction.")
+
+"""
+Lessons Learned
+1. Learned how to use Streamlit for building interactive web applications, including custom layouts, widgets, and file handling.
+2. Understood how to connect and integrate with Hugging Face models for NLP tasks, using both local and remote model files.
+3. Practiced connecting and pushing code to GitHub repositories, including branch management and collaboration workflows.
+4. Improved skills in handling document formats (PDF, DOCX, TXT) and extracting text for processing.
+5. Enhanced understanding of deploying AI-powered applications for legal document redaction and privacy protection.
+6. Learned to use Python libraries such as pypdf, python-docx, and Streamlit for end-to-end app development.
+7. Gained experience in error handling, user interface design, and providing user feedback in web apps.
+8. Explored best practices for organizing code, separating inference logic, and maintaining modularity.
+"""
