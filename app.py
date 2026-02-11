@@ -1,3 +1,8 @@
+"""
+Streamlit App for Legal Document Redaction using BERT-NER
+
+This app allows users to upload or paste text from PDF, Word, or Text files and redact sensitive information using a NER model.
+"""
 import streamlit as st
 from pypdf import PdfReader
 import re
@@ -295,13 +300,20 @@ st.markdown("""
 
 st.markdown("---")
 
-# Load NER model and redaction function from inference script
+# Load NER model name and redaction function from inference script
 st.info(f"🤖 Model: **{HF_MODEL_NAME}** | Architecture: Token Classification (LDR-NER)")
 
 # -----------------------------
 # Text Extraction Functions
 # -----------------------------
 def extract_text_from_pdf(uploaded_file):
+    """
+    Extract text from a PDF file using PdfReader.
+    Args:
+        uploaded_file: Uploaded PDF file object
+    Returns:
+        Extracted text as a string
+    """
     reader = PdfReader(uploaded_file)
     text = ""
     for page in reader.pages:
@@ -310,6 +322,13 @@ def extract_text_from_pdf(uploaded_file):
     return text.strip()
 
 def extract_text_from_docx(uploaded_file):
+    """
+    Extract text from a DOCX file using python-docx.
+    Args:
+        uploaded_file: Uploaded DOCX file object
+    Returns:
+        Extracted text as a string
+    """
     doc = Document(uploaded_file)
     text = ""
     for para in doc.paragraphs:
@@ -317,10 +336,24 @@ def extract_text_from_docx(uploaded_file):
     return text.strip()
 
 def extract_text_from_txt(uploaded_file):
+    """
+    Extract text from a TXT file.
+    Args:
+        uploaded_file: Uploaded TXT file object
+    Returns:
+        Extracted text as a string
+    """
     return uploaded_file.read().decode("utf-8").strip()
 
 def extract_text_from_file(uploaded_file):
     """Extract text from any supported file type"""
+    """
+    Extract text from any supported file type (PDF, DOCX, TXT).
+    Args:
+        uploaded_file: Uploaded file object
+    Returns:
+        Extracted text as a string, or None if unsupported or error
+    """
     file_extension = uploaded_file.name.split('.')[-1].lower()
     
     try:

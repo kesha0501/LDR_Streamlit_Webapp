@@ -1,6 +1,7 @@
 """
 Inference module for legal document redaction using BERT-NER
-This module provides the redaction functionality for the Streamlit app
+
+This module provides the redaction functionality for the Streamlit app. It loads a Hugging Face NER model and exposes functions to redact sensitive entities from text.
 """
 from transformers import pipeline, AutoTokenizer, AutoModelForTokenClassification
 import os
@@ -22,24 +23,23 @@ REDACTED_ENTITIES = {
 }
 
 def download_model():
-    """Download the model from Hugging Face if not available locally"""
+    """
+    Download the model and tokenizer from Hugging Face if not available locally.
+    Returns:
+        True if download and save successful, False otherwise.
+    """
     print(f"Model not found locally. Downloading from Hugging Face...")
     print(f"Model: {HF_MODEL_NAME}")
     print("This may take a few minutes...")
-    
     try:
         os.makedirs(model_path, exist_ok=True)
-        
         print("Downloading tokenizer...")
         tokenizer = AutoTokenizer.from_pretrained(HF_MODEL_NAME)
-        
         print("Downloading model...")
         model = AutoModelForTokenClassification.from_pretrained(HF_MODEL_NAME)
-        
         print(f"Saving to {model_path}...")
         tokenizer.save_pretrained(model_path)
         model.save_pretrained(model_path)
-        
         print(f"✅ Model successfully downloaded and saved!")
         return True
     except Exception as e:
@@ -71,27 +71,24 @@ except Exception as e:
 
 def redact_text(text, selected_entities=None):
     """
-    Redact sensitive information from text using NER model
-    Redacts: CODE, DATETIME, DEM, LOC, MISC, ORG, PERSON, QUANTITY, and O (other tags)
-    
+    Redact sensitive information from text using the NER model.
+    Redacts: CODE, DATETIME, DEM, LOC, MISC, ORG, PER, QUANTITY, and O (other tags)
+
     Args:
-        text: Input text to redact
-        selected_entities: List of entity types to redact (e.g., ["PERSON", "LOC", "ORG"])
-                          If None, redacts all entity types
-        
+        text (str): Input text to redact
+        selected_entities (list, optional): List of entity types to redact (e.g., ["PER", "LOC", "ORG"]).
+            If None, redacts all entity types.
+
     Returns:
-        Redacted text with sensitive info replaced by black lines (█)
+        str: Redacted text with sensitive info replaced by black lines (█)
     """
     if my_ner is None:
         raise Exception("NER model not loaded. Please check the model path.")
-    
     # Default to all entities if none specified
     if selected_entities is None:
         selected_entities = list(REDACTED_ENTITIES.keys())
-    
     entities = my_ner(text)
     entities = sorted(entities, key=lambda x: x['start'], reverse=True)
-    
     for item in entities:
         if item['entity_group'] in selected_entities:
             start = item['start']
@@ -99,10 +96,13 @@ def redact_text(text, selected_entities=None):
             redacted_text = text[start:end]
             # Replace with black line (█) maintaining text length
             text = text[:start] + "█" * len(redacted_text) + text[end:]
-    
     return text
 
 
 def get_ner_pipeline():
-    """Get the NER pipeline for advanced usage"""
+    """
+    Get the NER pipeline for advanced usage.
+    Returns:
+        transformers.Pipeline: The loaded NER pipeline, or None if not loaded.
+    """
     return my_ner
